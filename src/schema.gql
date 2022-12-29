@@ -1,0 +1,166 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Person {
+  id: Int!
+  name: String!
+
+  """Valor de nacimiento"""
+  born: Int
+}
+
+type User {
+  """ID en la base de datos"""
+  id: Int
+
+  """Nombre de usuario"""
+  userName: String
+
+  """Contraseña de usuario"""
+  password: String
+
+  """Documento de identificación"""
+  identification: String
+
+  """Roles de usuario"""
+  roles: [String!]
+
+  """Email del usuario"""
+  addressEmail: String
+}
+
+type messageUpdate {
+  """Devuelve el mensaje de actualización"""
+  message: String
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type Publication {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Query {
+  """Permite loguear un usuario"""
+  login(loginInput: LoginInput!): AuthResponse!
+
+  """Revalida un token correspondiente"""
+  revalite: AuthResponse!
+
+  """ Trae los usuarios de un determinado rol"""
+  findAllUser(roles: [ValidRoles!] = [user]): [User!]!
+  todos: String!
+  conseguir(id: Float!): Person!
+  publication(id: Int!): Publication!
+}
+
+input LoginInput {
+  addressEmail: String
+  userName: String
+  password: String!
+}
+
+"""
+Ullamco labore ut ut adipisicing commodo sit elit ullamco eiusmod ut mollit sint.
+"""
+enum ValidRoles {
+  admin
+  user
+  superUser
+}
+
+type Mutation {
+  """Crear un usuario determinado"""
+  usercreate(createUserInput: CreateUserInput!): User!
+
+  """Va bloquear el usuario correspondiente"""
+  blockUser(id: Float!): messageUpdate!
+
+  """Va a actualizar el usuario"""
+  updateUser(updateUser: UpdateUserInput!): messageUpdate!
+  crear(personInput: PersonInput!): Person!
+  borrar(id: Float!): Boolean!
+  actualizar(id: Float!, personInput: PersonInput!): Person!
+  createPublication(createPublicationInput: CreatePublicationInput!): Publication!
+  updatePublication(updatePublicationInput: UpdatePublicationInput!): Publication!
+  removePublication(id: Int!): Publication!
+}
+
+input CreateUserInput {
+  """Nombre completo del usuario"""
+  fullName: String
+
+  """roles permitidos de usuario"""
+  roles: [String!] = ["client"]
+
+  """usuario activo o no"""
+  isActive: Boolean = true
+
+  """Fecha de nacimiento del usuario"""
+  dateBirth: Date
+
+  """password user"""
+  password: String
+
+  """Nombre de usuario"""
+  userName: String
+
+  """Email del usuario"""
+  addressEmail: String
+
+  """Documento de identificación de un usuario"""
+  identification: String
+}
+
+input UpdateUserInput {
+  """Nombre completo del usuario"""
+  fullName: String
+
+  """roles permitidos de usuario"""
+  roles: [String!] = ["client"]
+
+  """usuario activo o no"""
+  isActive: Boolean = true
+
+  """Fecha de nacimiento del usuario"""
+  dateBirth: Date
+
+  """password user"""
+  password: String
+
+  """Nombre de usuario"""
+  userName: String
+
+  """Email del usuario"""
+  addressEmail: String
+
+  """Documento de identificación de un usuario"""
+  identification: String
+
+  """Nombre completo del usuario"""
+  id: Int
+}
+
+input PersonInput {
+  name: String
+  age: Float
+}
+
+input CreatePublicationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePublicationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
