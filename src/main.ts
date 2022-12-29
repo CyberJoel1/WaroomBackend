@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 const { ApolloServer } = require("apollo-server");
 const neo4j = require("neo4j-driver");
 const { Neo4jGraphQL } = require("@neo4j/graphql");
+import { ConfigService } from '@nestjs/config';
 
 declare const module: any;
 
@@ -13,6 +14,8 @@ async function bootstrap() {
     "bolt://localhost:7687",
     neo4j.auth.basic("neo4j", "letmein")
     );
+
+    
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes( 
@@ -23,7 +26,8 @@ async function bootstrap() {
    );
    app.enableCors();
    app.use(cookieParser('dev'));
-  await app.listen(3000);
+   
+  await app.listen(process.env.PORT || 3000);
   
 
   if (module.hot) {
