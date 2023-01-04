@@ -15,7 +15,12 @@ import { DateScalar } from './scalars/DateScalar.scalars';
 import { UtilsMoment } from './utils/moment.js/utils-momentjs';
 import moment from 'moment';
 import { JwtService } from '@nestjs/jwt';
+
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { PublicationModule } from './publication/publication.module';
+
+
 
 
 
@@ -50,7 +55,10 @@ import { PublicationModule } from './publication/publication.module';
         autoSchemaFile: join( process.cwd(), 'src/schema.gql'), 
         plugins: [
           ApolloServerPluginLandingPageLocalDefault
-        ],
+        ],      uploads: {
+          maxFileSize: 20000000, // 20 MB
+          maxFiles: 5
+        },
         context({ req }) {
           // const token = req.headers.authorization?.replace('Bearer ','');
           // if ( !token ) throw Error('Token needed');
@@ -68,10 +76,14 @@ ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' ,}),
     PersonModule,
     UserModule,
     AuthModule,
+    FileModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname,'..','static/products'), 
+    }),
     PublicationModule,
   
     
-  ],
+  ],   
   controllers:[],
   providers:[DateScalar,UtilsMoment,{
     provide: 'MomentWrapper',
