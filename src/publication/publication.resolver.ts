@@ -3,14 +3,21 @@ import { PublicationService } from './publication.service';
 import { Publication } from './entities/publication.entity';
 import { CreatePublicationInput } from './dto/create-publication.input';
 import { UpdatePublicationInput } from './dto/update-publication.input';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/auth/decorators/user-current.decorator';
+import { validRoles } from 'src/auth/enums/valid-roles.enum';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Publication)
 export class PublicationResolver {
   constructor(private readonly publicationService: PublicationService) {}
 
   @Mutation(() => Publication)
-  createPublication(@Args('createPublicationInput') createPublicationInput: CreatePublicationInput) {
-    return this.publicationService.create(createPublicationInput);
+  @UseGuards(JwtAuthGuard)
+  createPublication(@Args('createPublicationInput') createPublicationInput: CreatePublicationInput,
+  @CurrentUser([validRoles.user]) user: User) {
+    return this.publicationService.create(createPublicationInput, user);
   }
 
   @Query(() => [Publication], { name: 'publication' })

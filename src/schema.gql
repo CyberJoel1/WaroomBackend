@@ -41,8 +41,29 @@ type AuthResponse {
 }
 
 type Publication {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Nombre de usuario"""
+  longitud: Float
+
+  """Nombre de usuario"""
+  latitud: Float
+
+  """Nombre de usuario"""
+  banos: Int
+
+  """Nombre de usuario"""
+  habitaciones: Int
+
+  """Nombre de usuario"""
+  medida: Float
+
+  """Nombre de usuario"""
+  titulo: String
+
+  """Nombre de usuario"""
+  message: String
+
+  """Nombre de usuario"""
+  photos: [String!]
 }
 
 """Date custom scalar type"""
@@ -155,12 +176,66 @@ input PersonInput {
 }
 
 input CreatePublicationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Nombre de usuario"""
+  titulo: String
+
+  """Nombre de usuario"""
+  longitud: Float
+
+  """Nombre de usuario"""
+  latitud: Float
+
+  """Nombre de usuario"""
+  banos: Int
+
+  """Nombre de usuario"""
+  habitaciones: Int
+
+  """Nombre de usuario"""
+  medida: Float
+
+  """Nombre de usuario"""
+  message: String
+
+  """Nombre de usuario"""
+  photos: [String!] = []
+
+  """roles permitidos de usuario"""
+  activo: Boolean = true
+
+  """roles permitidos de usuario"""
+  tipo: String = "venta"
 }
 
 input UpdatePublicationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  """Nombre de usuario"""
+  titulo: String
+
+  """Nombre de usuario"""
+  longitud: Float
+
+  """Nombre de usuario"""
+  latitud: Float
+
+  """Nombre de usuario"""
+  banos: Int
+
+  """Nombre de usuario"""
+  habitaciones: Int
+
+  """Nombre de usuario"""
+  medida: Float
+
+  """Nombre de usuario"""
+  message: String
+
+  """Nombre de usuario"""
+  photos: [String!] = []
+
+  """roles permitidos de usuario"""
+  activo: Boolean = true
+
+  """roles permitidos de usuario"""
+  tipo: String = "venta"
   id: Int!
 }
