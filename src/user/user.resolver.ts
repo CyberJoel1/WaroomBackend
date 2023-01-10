@@ -31,6 +31,25 @@ export class UserResolver {
   }
 
 
+  @Query(() => [String], { name: 'checkUser', description:' Trae los usuarios de un determinado rol' })
+  @UseGuards(JwtAuthGuard)
+  async checkUser(@Args() validRoles:ValidRolesArgs,
+  @CurrentUser([validRoles.user]) user: User): Promise<any[]>{
+    let variable: any[] = [user.userName];
+    if(user.foto!=null){
+      variable.push(user.foto);
+    }
+      return ([...variable]);
+  }
+
+
+  @Query(() => User, { name: 'getDataProfile', description:' Trae los datos necesarios para el perfil' })
+  async dataProfile(@Args('userName') userName: String): Promise<User>{
+    const user = await this.userService.findDataProfile(userName);
+    return user;
+  }
+
+
 
   @Mutation(()=> messageUpdate,{name:'blockUser', description:'Va bloquear el usuario correspondiente'})
   @UseGuards(JwtAuthGuard)
@@ -38,10 +57,19 @@ export class UserResolver {
     return await this.userService.blockUser(id);
   }
 
-  @Mutation(()=> messageUpdate,{name:'updateUser', description:'Va a actualizar el usuario'})
+  @Mutation(()=> messageUpdate,{name:'updateToUser', description:'Va a actualizar el usuario'})
   @UseGuards(JwtAuthGuard)
-  async UpdateUserId(@Args('updateUser') updateUser: UpdateUserInput){
-    return await this.userService.updateUser(updateUser);
+  UpdateUserId(@Args('updateUser') updateUser: UpdateUserInput,
+  @CurrentUser([validRoles.user]) user: User){
+    console.log(updateUser)
+    return this.userService.updateUser(updateUser,user.id);
   }
 
+
+  @Query(() => User, { name: 'findPropertyUser', description:' Trae los usuarios de un determinado rol' })
+  @UseGuards(JwtAuthGuard)
+  async findPropertyUser(@Args('id', ParseIntPipe) id: number): Promise<User>{
+    const user = await this.userService.findPropertyuser(id);
+    return user;
+  }
 }

@@ -1,5 +1,6 @@
 import { InputType, Int, Field, Float } from '@nestjs/graphql';
-import { IsOptional, MaxLength, maxLength } from 'class-validator';
+import { IsEnum, IsOptional, MaxLength, maxLength } from 'class-validator';
+import { validTypesPublication } from '../enums/category.publication';
 
 @InputType()
 export class CreatePublicationInput {
@@ -42,9 +43,11 @@ export class CreatePublicationInput {
   @IsOptional()
   activo?: boolean;
 
-  @Field(() => String, { description: 'roles permitidos de usuario' , defaultValue:'venta'})
+  @IsEnum(validTypesPublication)
+  @Field(() => validTypesPublication, { description: 'roles permitidos de usuario' , defaultValue:'venta'})
   @IsOptional()
   tipo?: String;
+  
 
 }
 

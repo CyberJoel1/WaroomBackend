@@ -8,6 +8,7 @@ import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/decorators/user-current.decorator';
 import { validRoles } from 'src/auth/enums/valid-roles.enum';
 import { User } from 'src/user/entities/user.entity';
+import { messageUpdate } from 'src/user/entities/messageUpdate.entity';
 
 @Resolver(() => Publication)
 export class PublicationResolver {
@@ -20,23 +21,26 @@ export class PublicationResolver {
     return this.publicationService.create(createPublicationInput, user);
   }
 
-  @Query(() => [Publication], { name: 'publication' })
-  findAll() {
-    return this.publicationService.findAll();
+  @Query(() => [Publication], { name: 'publicationAll' })
+  @UseGuards(JwtAuthGuard)
+  async findAlls(@Args('nameUser', { type: () => String }) nameUser: string) {
+    return this.publicationService.findAllForUserName(nameUser);
   }
+  
 
-  @Query(() => Publication, { name: 'publication' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+
+  @Query(() => Publication, { name: 'publicationOne' })
+  findOnePublication(@Args('id', { type: () => Int }) id: number) {
     return this.publicationService.findOne(id);
   }
 
   @Mutation(() => Publication)
   updatePublication(@Args('updatePublicationInput') updatePublicationInput: UpdatePublicationInput) {
-    return this.publicationService.update(updatePublicationInput.id, updatePublicationInput);
+    return this.publicationService.update(updatePublicationInput);
   }
 
-  @Mutation(() => Publication)
-  removePublication(@Args('id', { type: () => Int }) id: number) {
-    return this.publicationService.remove(id);
+  @Mutation(() => messageUpdate)
+  removePublication(@Args('id', { type: () => Int }) id: number): Promise<messageUpdate> {
+    return this.publicationService.removeOne(id);
   }
 }

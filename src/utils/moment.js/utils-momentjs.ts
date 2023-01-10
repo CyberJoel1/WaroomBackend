@@ -19,7 +19,7 @@ export class UtilsMoment {
 
    static calculateAgeAdult(){
         let fecha2: moment.Moment = moment(new Date());
-        return fecha2.subtract(18,'years').toDate();
+        return (fecha2.subtract(18,'years').toDate());
   }
 
 

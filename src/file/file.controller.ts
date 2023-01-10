@@ -24,7 +24,6 @@ import { ConfigService } from '@nestjs/config';
 import { createReadStream } from 'fs';
 import path, { join } from 'path';
 import { readFileSync } from 'fs';
-import { Response } from 'express';
 
 @Controller('file')
 export class FileController {

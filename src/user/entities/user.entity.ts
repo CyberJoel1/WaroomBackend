@@ -1,10 +1,15 @@
 import { ObjectType, Field, Int, GraphQLISODateTime } from '@nestjs/graphql';
+import { IsOptional } from 'class-validator';
 
 @ObjectType()
 export class User {
   @Field(() => Int, { description: 'ID en la base de datos' ,nullable: true})
   id: number;
 
+  @Field(() => String, { description: 'Nombre completo del usuario',nullable:true })
+  @IsOptional()
+  fullName: string;
+  
   @Field(() => String, { description: 'Nombre de usuario' ,nullable: true})
   userName: string;
 
@@ -20,4 +25,8 @@ export class User {
   @Field(() => String, { description: 'Email del usuario' ,nullable: true})
   addressEmail: string;
 
+
+  @Field(() => String, { description: 'foto de perfil' ,nullable:true})
+  @IsOptional()
+  foto: String;
 }

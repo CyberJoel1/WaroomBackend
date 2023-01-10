@@ -3,6 +3,8 @@ import { User } from 'src/user/entities/user.entity';
 import { CreatePublicationInput } from './dto/create-publication.input';
 import { UpdatePublicationInput } from './dto/update-publication.input';
 import { PublicationRepository } from './publication.repository';
+import { Publication } from './entities/publication.entity';
+import { messageUpdate } from '../user/entities/messageUpdate.entity';
 
 @Injectable()
 export class PublicationService {
@@ -18,22 +20,44 @@ export class PublicationService {
     }
   }
 
-
-
-  findAll() {
-    return `This action returns all publication`;
+  async update(updatePublicationInput: UpdatePublicationInput) {
+    try {
+      const publication = await this.publicationRepository.updatePublication(updatePublicationInput);
+      return publication;
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} publication`;
+
+
+  async findAllForUserName( nameUser: string) {
+    try {
+      const publication = await this.publicationRepository.findAllForUserName(nameUser);
+      return publication;
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
   }
 
-  update(id: number, updatePublicationInput: UpdatePublicationInput) {
-    return `This action updates a #${id} publication`;
+  async findOne(id: number) {
+    try {
+      const publication = await this.publicationRepository.findOne(id);
+      return publication;
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} publication`;
+
+
+  async removeOne(id: number): Promise<messageUpdate>{
+    try {
+      await this.publicationRepository.deleteOne(id);
+      return {message:`Publicación ${id} eliminada`};
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
   }
 
   private handleDBerrors(error: any): never {

@@ -1,9 +1,10 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
-import { IsDate, IsDateString, IsNotEmpty, IsOptional, Length, MaxDate, MaxLength, MinDate } from 'class-validator';
+import { IsDate, IsDateString, IsEnum, IsNotEmpty, IsOptional, Length, MaxDate, MaxLength, MinDate } from 'class-validator';
 import { util } from 'prettier';
 import { DateScalar } from 'src/scalars/DateScalar.scalars';
 import { UtilsMoment } from '../../utils/moment.js/utils-momentjs';
+import { TypesUser } from '../enums/tiposUser.enums';
 
 
 
@@ -48,4 +49,9 @@ export class CreateUserInput {
   @Field(() => String, { description: 'Documento de identificación de un usuario' ,nullable:true})
   @IsOptional()
   identification: String;
+
+  @IsEnum(TypesUser)
+  @Field(() => String, { description: 'Tipo de usuario' ,nullable:true, defaultValue:'No definido'})
+  @IsOptional()
+  tipos: String;
 }

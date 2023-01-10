@@ -7,9 +7,13 @@ import { LoginInput } from 'src/auth/dto/login.input';
 import { validRoles } from 'src/auth/enums/valid-roles.enum';
 import { messageUpdate } from './entities/messageUpdate.entity';
 import { UpdateUserInput } from './dto/update-user.input';
+import * as moment from 'moment'
 
 @Injectable()
 export class UserRepository {
+
+  
+
   constructor(private readonly queryRepository: QueryRepository) {}
 
   async createUser(createUserInput: CreateUserInput): Promise<User> {
@@ -22,6 +26,7 @@ export class UserRepository {
       password,
       roles,
       isActive,
+      tipos,
     } = createUserInput;
     let roleString = `[`;
     roles.forEach((element, index) => {
@@ -32,15 +37,15 @@ export class UserRepository {
     });
     roleString += `]`;
     const passwordCrypt = bcrypt.hashSync(password.toString(), 10);
-    console.log(dateBirth);
-
+  
+    let date = moment(dateBirth).format('YYYY-MM-DD');
     const query = await this.queryRepository
       .initQuery()
       .raw(
         `CREATE (user:User {userName: "${userName}", addressEmail: "${addressEmail}"
                         ,identification: "${identification}", password: "${passwordCrypt}"
-                        ,fullName: "${fullName}" ,dateBirth: ("${dateBirth.toLocaleDateString()}") ,roles: ${roleString}
-                        ,isActive: ${isActive}}) 
+                        ,fullName: "${fullName}" ,dateBirth:date("${date}") ,roles: ${roleString}
+                        ,isActive: ${isActive}, tipo:"${tipos}"}) 
                         RETURN user`,
       )
       .run();
@@ -54,6 +59,33 @@ export class UserRepository {
         id: identity,
         ...properties,
       };
+    }
+  }
+
+  async findUserProfile(userName: String): Promise<User> {
+  
+    let option =` user.userName = "${userName}" `;
+    const query = await this.queryRepository
+      .initQuery()
+      .raw(
+        `MATCH (user:User) 
+    WHERE` +
+          option +
+          `RETURN user`,
+      )
+      .run();
+    console.log(query);
+    if (query?.length > 0) {
+      const {
+        user: { identity, properties },
+      } = query[0];
+
+      return {
+        id: identity,
+        ...properties,
+      };
+    } else {
+      throw new BadRequestException('Los datos no son los correctos');
     }
   }
 
@@ -167,29 +199,63 @@ export class UserRepository {
     }
   }
 
-  async updateUserforId(updateUser: UpdateUserInput): Promise<messageUpdate>{
+  async updateUserforId(updateUser: UpdateUserInput, id:number): Promise<messageUpdate> {
+
+     let date = moment(updateUser.dateBirth).format('YYYY-MM-DD');
+     const passwordCrypt = bcrypt.hashSync(updateUser.password.toString(), 10);
+    //let date =moment(updateUser.dateBirth.toString(),'YYYY-MM-DD').toDate();
     console.log(`MATCH (user:User) 
-    WHERE ID(user) = ${updateUser.id}  AND user.isActive = true
-    SET user.password = ${updateUser.password}, user.identification = ${updateUser.identification},
-     user.addressEmail = ${updateUser.addressEmail}, user.fullName = "${updateUser.fullName}",
-     user.userName = ${updateUser.userName}, user.dateBirth = ${updateUser.dateBirth} 
+    WHERE ID(user) = ${id}  AND user.isActive = true
+    SET user.password = ${passwordCrypt}, user.identification = ${updateUser.identification},
+     user.addressEmail = "${updateUser.addressEmail}", user.fullName = "${updateUser.fullName}",
+     user.userName = ${updateUser.userName}, user.dateBirth = date("${date}"), user.foto= "${updateUser.foto}" 
     RETURN user.userName`);
+
+    
     const query = await this.queryRepository
-    .initQuery()
-    .raw(
-      `MATCH (user:User) 
-      WHERE ID(user) = ${updateUser.id}  AND user.isActive = true
-      SET user.fullName = "${updateUser.fullName}"
-      RETURN user.userName`,
-    )
-    .run();
-  console.log(query);
-  if (query?.length === 0) {
-    throw new Error('Los datos no son los correctos');
-  } else {
-    return {
-      message: `Se ha actualizado el usuario ${query[0]['user.userName']}`,
-    };
+      .initQuery()
+      .raw(
+        `MATCH (user:User) 
+        WHERE ID(user) = ${id}  AND user.isActive = true
+        SET user.password = "${passwordCrypt}", user.identification = "${updateUser.identification}",
+         user.addressEmail = "${updateUser.addressEmail}", user.fullName = "${updateUser.fullName}",
+         user.userName = "${updateUser.userName}", user.dateBirth = date("${date}"), user.foto= "${updateUser.foto}"
+        RETURN user.userName`,
+      )
+      .run();
+    console.log(query);
+    if (query?.length === 0) {
+      throw new Error('Los datos no son los correctos');
+    } else {
+      return {
+        message: `Se ha actualizado el usuario ${query[0]['user.userName']}`,
+      };
+    }
   }
+
+  async findPropertyUser(id: number): Promise<User> {
+    const query = await this.queryRepository
+      .initQuery()
+      .raw(
+        `MATCH (publication:Publication)<-[:PUBLICATED]-(user:User)
+    WHERE` +
+          ` id(publication) = ${id} ` +
+          `RETURN user`,
+      )
+      .run();
+
+    if (query?.length > 0) {
+      const {
+        user: { identity, properties },
+      } = query[0];
+
+      return {
+        id: identity,
+        ...properties,
+      };
+    }
   }
+
+
+  
 }
