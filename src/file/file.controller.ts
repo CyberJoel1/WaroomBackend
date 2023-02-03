@@ -38,6 +38,7 @@ import { createReadStream } from 'fs';
 import path, { join } from 'path';
 import { readFileSync } from 'fs';
 import { supabase } from './helpers/fileAuth.helper';
+import { Response } from 'express';
 
 @Controller('file')
 export class FileController {
