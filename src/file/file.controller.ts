@@ -1,3 +1,16 @@
+import { v4 as uuid } from 'uuid'
+import {
+  AuthChangeEvent,
+  AuthSession,
+  createClient,
+  Session,
+  SupabaseClient,
+  User,
+} from '@supabase/supabase-js'
+import {Blob} from 'buffer';
+
+import { request, response } from 'express';
+
 import {
   Controller,
   Get,
@@ -19,12 +32,12 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFilter } from './helpers/fileFilter.helper';
 import { diskStorage } from 'multer';
-import { fileNamer } from './helpers/fileNamer.helper';
+import { fileNamer, fileDestination } from './helpers/fileNamer.helper';
 import { ConfigService } from '@nestjs/config';
 import { createReadStream } from 'fs';
 import path, { join } from 'path';
 import { readFileSync } from 'fs';
-import { Response } from 'express';
+import { supabase } from './helpers/fileAuth.helper';
 
 @Controller('file')
 export class FileController {
@@ -50,25 +63,36 @@ export class FileController {
     FileInterceptor('file', {
       fileFilter: fileFilter,
       // limits: { fileSize: 1000 }
-      storage: diskStorage({
-        destination: './static/products',
-        filename: fileNamer,
-      }),
+
     }),
   )
-  uploadProductImage(@UploadedFile() file: Express.Multer.File) {
+  async uploadProductImage(@UploadedFile() file: Express.Multer.File) {
     console.log("Hola ahora si "+ file)
    // files.forEach((file) => {
       if (!file) {
         throw new BadRequestException('Make sure that the file is an image');
       }
 
-      // const secureUrl = `${ file.filename }`;
-      const secureUrl = `${this.configService.get('HOST_API')}${
-        file.filename
-      }`;
-      console.log(file.filename)
-      return { secureUrl };
+
+      const fileExtension = file.mimetype.split('/')[1];
+
+      const fileName = `${ uuid() }.${ fileExtension }`;
+        const avatarFile = file
+        
+    
+    // Create a single supabase client for interacting with your database
+    
+        const { data, error } = await supabase
+        .storage
+        .from('filewaroom')
+        .upload(`static/waroom/${fileName}`, avatarFile.buffer as unknown as File, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType:'image/*'
+        })
+        const secureUrl =('https://jbtpjkjcxadmeecjohpq.supabase.co/storage/v1/object/public/filewaroom/'+data.path)
+        return { secureUrl };
+      
     //});
   }
 }
