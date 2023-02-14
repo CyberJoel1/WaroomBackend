@@ -93,7 +93,7 @@ export class FriendlyRepository {
     if (query?.length > 0) {
       const { friend1, friend2 } = query[0];
 
-      return [friend1.identity, friend2.identity];
+      return [friend1.identity, friend2.identity,];
     }
     return [];
   }

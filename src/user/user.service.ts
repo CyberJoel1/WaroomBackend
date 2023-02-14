@@ -14,12 +14,28 @@ import * as bcrypt from 'bcrypt';
 import { validRoles } from 'src/auth/enums/valid-roles.enum';
 import { NotImplementedException } from '@nestjs/common';
 import { messageUpdate } from './entities/messageUpdate.entity';
+import { TreatedDenounceCommentInput } from 'src/comment/dto/treated-denounceComment.input';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
-  private logger = new Logger('userService');
+  private logger = new Logger(UserService.name);
+
+  
+
+  @Cron('0 0 0 * * *')
+  async handleCron() {
+    this.logger.debug('Inicia desbloquear usuarios');
+    try {
+      let user: any = await this.usersRepository.treatedBlockUser();
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
+  }
 
   constructor(private readonly usersRepository: UserRepository) {}
+
+
 
   async findAll(roles: validRoles[]): Promise<User[]> {
     let users: User[] = await this.usersRepository.findAll([validRoles.user]);
@@ -61,6 +77,16 @@ export class UserService {
     return user;
   }
 
+  async findOneAdmin(loginInput: LoginInput): Promise<User> {
+    const user = await this.usersRepository.findOneUserAdmin(loginInput);
+
+    if (!bcrypt.compareSync(loginInput.password, user.password)) {
+      throw new BadRequestException('Password incorrect');
+    }
+    return user;
+  }
+
+
   async findOneForId(id: number): Promise<User> {
     try {
       const user = await this.usersRepository.findOneUserForId(id);
@@ -70,12 +96,12 @@ export class UserService {
     }
   }
 
-  async blockUser(id: number): Promise<messageUpdate> {
+  async blockUser(treatedDenounceCommentInput: TreatedDenounceCommentInput): Promise<messageUpdate> {
     try {
-      const user = await this.usersRepository.blockUserForId(id);
+      const user = await this.usersRepository.blockUserForUsername(treatedDenounceCommentInput);
       return user;
     } catch (error) {
-      throw new NotFoundException('No se ha encontrando el id:' + id);
+      throw new NotFoundException('No se ha encontrando el userName:' + treatedDenounceCommentInput.userName);
     }
   }
 

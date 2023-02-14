@@ -14,6 +14,14 @@ export class PublicationService {
 
   constructor(private readonly publicationRepository: PublicationRepository) {}
 
+  async deleteDenounce(idDenouncePublication: number) {
+    try {
+      return await this.publicationRepository.deleteDenouncePublication(idDenouncePublication);
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
+  }
+
   async create(createPublicationInput: CreatePublicationInput, user: User) {
     try {
       const publication = await this.publicationRepository.createPublication(createPublicationInput, user);
@@ -61,6 +69,13 @@ export class PublicationService {
     }
   }
 
+  async deleteDenounceByUserName(userName:string) {
+    try {
+      return await this.publicationRepository.deleteDenouncesByUsername(userName);
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
+  }
   
   async findAllDenounce(skip?:number):Promise<PublicationOutput[]> {
     try {

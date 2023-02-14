@@ -64,7 +64,7 @@ export class PublicationRepository {
         
         for (const publicationx of query) {
           const { user1, user2, denounce } = publicationx;
-          console.log(publicationx);
+          
   
           denounces.push({
             idPublication: denounce.identity,
@@ -73,12 +73,48 @@ export class PublicationRepository {
             foto: denounce.properties.foto
           });
         }
-        console.log(denounces);
+        
         return denounces;
       }else{
         const denounces: any[] = [];
         return denounces;
       }
+  }
+
+  async deleteDenouncePublication(idDenouncePublication: number) {
+    console.log(`MATCH ()-[denounce:DENOUNCEPUBLICATION]->()
+    WHERE id(denounce) = ${idDenouncePublication} DETACH DELETE denounce`);
+    const query = await this.queryRepository
+      .initQuery()
+      .raw(
+        `MATCH ()-[denounce:DENOUNCEPUBLICATION]->()
+        WHERE id(denounce) = ${idDenouncePublication} DETACH DELETE denounce`,
+      )
+      .run();
+
+    if (query?.length > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async deleteDenouncesByUsername(userName:string): Promise<Boolean> {
+    console.log(`MATCH ()-[denounce:DENOUNCEPUBLICATION]->(user:User WHERE user.userName="${userName}") 
+    DETACH DELETE denounce`);
+    const query = await this.queryRepository
+      .initQuery()
+      .raw(
+        `MATCH ()-[denounce:DENOUNCEPUBLICATION]->(user:User WHERE user.userName="${userName}") 
+        DETACH DELETE denounce`,
+      )
+      .run();
+
+    if (query?.length > 0) {
+      return true;
+    }
+
+    return false;
   }
 
   async countPublicationDenounce(): Promise<number> {
@@ -226,7 +262,7 @@ export class PublicationRepository {
           ...merged,
         });
       }
-      console.log(publications);
+      
       return publications;
     }
   }
@@ -268,7 +304,7 @@ export class PublicationRepository {
           ...merged,
         });
       }
-      console.log(publications);
+     
       return publications;
     }
   }

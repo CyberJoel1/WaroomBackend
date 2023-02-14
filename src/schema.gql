@@ -1,0 +1,498 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Person {
+  id: Int!
+  name: String!
+
+  """Valor de nacimiento"""
+  born: Int
+}
+
+type User {
+  """ID en la base de datos"""
+  id: Int
+
+  """Nombre completo del usuario"""
+  fullName: String
+
+  """Nombre de usuario"""
+  userName: String
+
+  """Contraseña de usuario"""
+  password: String
+
+  """Documento de identificación"""
+  identification: String
+
+  """Roles de usuario"""
+  roles: [String!]
+
+  """Email del usuario"""
+  addressEmail: String
+
+  """foto de perfil"""
+  foto: String
+}
+
+type messageUpdate {
+  """Devuelve el mensaje de actualización"""
+  message: String
+}
+
+type Friendly {
+  """Example field (placeholder)"""
+  idRelation: Int
+
+  """Example field (placeholder)"""
+  user: User
+}
+
+type Publication {
+  """Id del publicación"""
+  identity: Int
+
+  """Nombre de usuario"""
+  longitud: Float
+
+  """Nombre de usuario"""
+  latitud: Float
+
+  """Nombre de usuario"""
+  banos: Int
+
+  """Nombre de usuario"""
+  habitaciones: Int
+
+  """Nombre de usuario"""
+  medida: Float
+
+  """Nombre de usuario"""
+  titulo: String
+
+  """Nombre de usuario"""
+  message: String
+
+  """Nombre de usuario"""
+  photos: [String!]
+
+  """tipos de inmueble"""
+  tipo: validTypesPublication!
+
+  """Fecha de creación"""
+  date_created: String
+
+  """Fecha de creación"""
+  user: User
+}
+
+"""Tipos de publicaciones"""
+enum validTypesPublication {
+  arriendo
+  venta
+}
+
+type PublicationOutput {
+  """Example field (placeholder)"""
+  idPublication: Int
+
+  """Example field (placeholder)"""
+  user1: User
+
+  """Example field (placeholder)"""
+  user2: User
+
+  """Example field (placeholder)"""
+  foto: String
+}
+
+type Comment {
+  """Example field (placeholder)"""
+  id: Int
+
+  """Example field (placeholder)"""
+  comment: String
+
+  """Example field (placeholder)"""
+  autor: Boolean
+
+  """Fecha de creación"""
+  user: User
+
+  """Fecha de creación"""
+  date_created: String
+}
+
+type messageComment {
+  """Devuelve el mensaje de actualización"""
+  confirmMessage: Boolean
+}
+
+type CommentOutput {
+  """Example field (placeholder)"""
+  idCommentary: Int
+
+  """Example field (placeholder)"""
+  user1: User
+
+  """Example field (placeholder)"""
+  user2: User
+
+  """Example field (placeholder)"""
+  foto: String
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Query {
+  """Permite loguear un usuario"""
+  login(loginInput: LoginInput!): AuthResponse!
+
+  """Revalida un token correspondiente"""
+  revalite: AuthResponse!
+
+  """Permite loguear un administrador"""
+  loginAdmin(loginInput: LoginInput!): AuthResponse!
+
+  """ Trae los usuarios de un determinado rol"""
+  findAllUser(roles: [ValidRoles!] = [user]): [User!]!
+
+  """ Trae los usuarios de un determinado rol"""
+  checkUser(roles: [ValidRoles!] = [user]): [String!]!
+
+  """ Trae los datos necesarios para el perfil"""
+  getDataProfile(userName: String!): User!
+
+  """ Trae los datos necesarios para el chat"""
+  getDataProfileChat(addressEmail: String!): User!
+
+  """ Trae los usuarios de un determinado rol"""
+  findPropertyUser(id: Float!): User!
+
+  """ Trae los usuarios de un determinado rol"""
+  matchUser(stringUser: String!): [User!]!
+
+  """Devuelve todas las solicitudes de amistad"""
+  findAllRequestForUserName(user2: String!): [Friendly!]!
+
+  """Devuelve todos los amigos"""
+  findAllFriendsForUserName(userName: String!): [User!]!
+
+  """Permite observar el estado de una relación de amistad"""
+  findConfirmFriend(user2: String!): String!
+
+  """Devuelve los id para chat"""
+  findConfirmChat(user2: String!): [Int!]!
+
+  """Confirma si es tu gateway a escuchar"""
+  findConfirmChatListen(idRelation: Float!): Boolean!
+  findAllCommentDenounce(Skip: Float): [CommentOutput!]!
+  countDenounce: Float!
+  Allcomentary(id: Int!, pag: Int = 10, fecha: String = "2023-02-13T00:27:19.023"): [Comment!]!
+  findAllPublicationDenounce(Skip: Float): [PublicationOutput!]!
+  CountDenounces: Float!
+  publicationAll(nameUser: String!): [Publication!]!
+  publicationAllLikes(nameUser: String!): [Publication!]!
+  publicationAllByType(typeProperty: String!, filter: FilterPublicationInput = null): [Publication!]!
+  publicationRecomendation: [Publication!]!
+  publicationOne(id: Int!): Publication!
+
+  """chequea si hay un like"""
+  checkLike(createLikeInput: CreateLikeInput!): Boolean!
+
+  """Contar numero de likes"""
+  countLike(countLike: CreateLikeInput!): Int!
+  todos: String!
+  conseguir(id: Float!): Person!
+}
+
+input LoginInput {
+  addressEmail: String
+  userName: String
+  password: String!
+}
+
+"""
+Ullamco labore ut ut adipisicing commodo sit elit ullamco eiusmod ut mollit sint.
+"""
+enum ValidRoles {
+  admin
+  user
+  superUser
+}
+
+input FilterPublicationInput {
+  """Nombre de usuario"""
+  rango: Float = 500
+
+  """Nombre de usuario"""
+  longitud: Float = -79.1642189
+
+  """Nombre de usuario"""
+  latitud: Float = -0.2411834
+
+  """Nombre de usuario"""
+  banos: Int = 0
+
+  """Nombre de usuario"""
+  habitaciones: Int = 0
+
+  """Nombre de usuario"""
+  minMedida: Int = 1
+
+  """Nombre de usuario"""
+  maxMedida: Int = 100000000
+}
+
+input CreateLikeInput {
+  """Example field (placeholder)"""
+  idPublication: Int
+}
+
+type Mutation {
+  """Crear un usuario determinado"""
+  usercreate(createUserInput: CreateUserInput!): User!
+  traeatedDenounceComment(treatedDenounceCommentInput: TreatedDenounceCommentInput!): Boolean!
+
+  """Va a actualizar el usuario"""
+  updateToUser(updateUser: UpdateUserInput!): messageUpdate!
+
+  """Crea una relación de amistad entre dos usuarios"""
+  createFriendly(createFriendlyInput: CreateFriendlyInput!): Boolean!
+
+  """Confirma una solicitud de amistad"""
+  confirmRequestOne(id: Int!): Friendly!
+  updateFriendly(updateFriendlyInput: UpdateFriendlyInput!): Friendly!
+  removeFriendly(userReceived: String!): Boolean!
+  createComment(createCommentInput: CreateCommentInput!): messageComment!
+  createCommentDenounce(denounceComment: DenounceComment!): Boolean!
+  deleteCommentDenounce(idDenounceComment: Float!): Boolean!
+  updateComment(updateCommentInput: UpdateCommentInput!): messageComment!
+  removeComment(id: Int!): Boolean!
+  createPublication(createPublicationInput: CreatePublicationInput!): Publication!
+  createPublicationDenounce(denouncePublication: DenouncePublication!): Boolean!
+  deletePublicationDenounce(idDenouncePublication: Float!): Boolean!
+  updatePublication(updatePublicationInput: UpdatePublicationInput!): Publication!
+  removePublication(id: Int!): messageUpdate!
+
+  """Crear like"""
+  createLike(createLikeInput: CreateLikeInput!): Boolean!
+
+  """Remover un like"""
+  removeLike(removeLikeInput: CreateLikeInput!): Boolean!
+  crear(personInput: PersonInput!): Person!
+  borrar(id: Float!): Boolean!
+  actualizar(id: Float!, personInput: PersonInput!): Person!
+}
+
+input CreateUserInput {
+  """Nombre completo del usuario"""
+  fullName: String
+
+  """roles permitidos de usuario"""
+  roles: [String!] = ["client"]
+
+  """usuario activo o no"""
+  isActive: Boolean = true
+
+  """Fecha de nacimiento del usuario"""
+  dateBirth: Date
+
+  """password user"""
+  password: String
+
+  """Nombre de usuario"""
+  userName: String
+
+  """Email del usuario"""
+  addressEmail: String
+
+  """Documento de identificación de un usuario"""
+  identification: String
+
+  """Tipo de usuario"""
+  tipos: String = "No definido"
+}
+
+input TreatedDenounceCommentInput {
+  """Fecha fin de bloqueo"""
+  dateEndBlock: Date
+
+  """Example field (placeholder)"""
+  userName: String
+}
+
+input UpdateUserInput {
+  """Nombre completo del usuario"""
+  fullName: String
+
+  """roles permitidos de usuario"""
+  roles: [String!] = ["client"]
+
+  """usuario activo o no"""
+  isActive: Boolean = true
+
+  """Fecha de nacimiento del usuario"""
+  dateBirth: Date
+
+  """password user"""
+  password: String
+
+  """Nombre de usuario"""
+  userName: String
+
+  """Email del usuario"""
+  addressEmail: String
+
+  """Documento de identificación de un usuario"""
+  identification: String
+
+  """Tipo de usuario"""
+  tipos: String = "No definido"
+
+  """foto de perfil"""
+  foto: String
+}
+
+input CreateFriendlyInput {
+  """Example field (placeholder)"""
+  userSend: Int
+
+  """Example field (placeholder)"""
+  userReceived: String
+}
+
+input UpdateFriendlyInput {
+  """Example field (placeholder)"""
+  userSend: Int
+
+  """Example field (placeholder)"""
+  userReceived: String
+  id: Int!
+}
+
+input CreateCommentInput {
+  """Example field (placeholder)"""
+  idPublication: Int
+
+  """Example field (placeholder)"""
+  comment: String
+
+  """Example field (placeholder)"""
+  autor: Boolean
+}
+
+input DenounceComment {
+  """Example field (placeholder)"""
+  idComment: Int
+
+  """Example field (placeholder)"""
+  foto: String
+
+  """Example field (placeholder)"""
+  comment: String
+
+  """Example field (placeholder)"""
+  userName: String
+}
+
+input UpdateCommentInput {
+  """Example field (placeholder)"""
+  id: Int
+
+  """Example field (placeholder)"""
+  comment: String
+}
+
+input CreatePublicationInput {
+  """Nombre de usuario"""
+  titulo: String
+
+  """Nombre de usuario"""
+  longitud: Float
+
+  """Nombre de usuario"""
+  latitud: Float
+
+  """Nombre de usuario"""
+  banos: Int
+
+  """Nombre de usuario"""
+  habitaciones: Int
+
+  """Nombre de usuario"""
+  medida: Float
+
+  """Nombre de usuario"""
+  message: String
+
+  """Nombre de usuario"""
+  photos: [String!] = []
+
+  """roles permitidos de usuario"""
+  activo: Boolean = true
+
+  """roles permitidos de usuario"""
+  tipo: validTypesPublication = venta
+}
+
+input DenouncePublication {
+  """Example field (placeholder)"""
+  idPublication: Int
+
+  """Example field (placeholder)"""
+  foto: String
+
+  """Example field (placeholder)"""
+  comment: String
+
+  """Example field (placeholder)"""
+  userName: String
+}
+
+input UpdatePublicationInput {
+  """Nombre de usuario"""
+  titulo: String
+
+  """Nombre de usuario"""
+  longitud: Float
+
+  """Nombre de usuario"""
+  latitud: Float
+
+  """Nombre de usuario"""
+  banos: Int
+
+  """Nombre de usuario"""
+  habitaciones: Int
+
+  """Nombre de usuario"""
+  medida: Float
+
+  """Nombre de usuario"""
+  message: String
+
+  """Nombre de usuario"""
+  photos: [String!] = []
+
+  """roles permitidos de usuario"""
+  activo: Boolean = true
+
+  """roles permitidos de usuario"""
+  tipo: validTypesPublication = venta
+
+  """id de publicación"""
+  id: Int
+}
+
+input PersonInput {
+  name: String
+  age: Float
+}

@@ -33,9 +33,18 @@ export class PublicationResolver {
 
   @Query(() => [PublicationOutput])
   @UseGuards(JwtAuthGuard)
-  findAllPublicationDenounce(@CurrentUser([]) user: User, @Args('Skip',{nullable:true}) skip?: number) {
+  findAllPublicationDenounce(@CurrentUser([validRoles.admin]) user: User, @Args('Skip',{nullable:true}) skip?: number) {
     return this.publicationService.findAllDenounce(skip);
 
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
+  deletePublicationDenounce(
+    @Args('idDenouncePublication') idDenouncePublication: number,
+    @CurrentUser([validRoles.admin]) user: User,
+  ) {
+    return this.publicationService.deleteDenounce(idDenouncePublication);
   }
 
   @Query(() => Number, { name: 'CountDenounces' })

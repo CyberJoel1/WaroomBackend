@@ -50,39 +50,57 @@ export class CommentRepository {
       return 0;
     }
   }
-  async findAllCommentDenounce(skip?: number): Promise<CommentOutput[]> {
-    const skipSearch = skip ?? 0;
-    console.log(
-      `MATCH (user1:User)-[denounce:DENOUNCE]->(user2:User) 
-      RETURN user1,user2,denounce ORDER BY id(denounce) SKIP ${skipSearch} LIMIT 10`,
-    );
+
+  async deleteDenounceComment(idDenounceComment: number) {
+    console.log(`MATCH ()-[denounce:DENOUNCE]->()
+    WHERE id(denounce) = ${idDenounceComment} DETACH DELETE denounce`);
     const query = await this.queryRepository
       .initQuery()
       .raw(
-        `MATCH (user1:User)-[denounce:DENOUNCE]->(user2:User) 
-        RETURN user1,user2,denounce ORDER BY id(denounce) SKIP ${skipSearch} LIMIT 10`,
+        `MATCH ()-[denounce:DENOUNCE]->()
+        WHERE id(denounce) = ${idDenounceComment} DETACH DELETE denounce`,
       )
       .run();
 
     if (query?.length > 0) {
-      const denounces: CommentOutput[] = [];
-
-      for (const publicationx of query) {
-        const { user1, user2, denounce } = publicationx;
-        console.log(denounce.identity);
-        denounces.push({
-          idCommentary: denounce.identity,
-          user1: { ...user1.properties },
-          user2: { ...user2.properties },
-          foto: denounce.properties.foto,
-        });
-      }
-
-      return denounces;
-    } else {
-      const denounces: CommentOutput[] = [];
-      return denounces;
+      return true;
     }
+
+    return false;
+  }
+
+  async findAllCommentDenounce(skip?: number): Promise<CommentOutput[]> {
+    const skipCount = skip ?? 0;
+    console.log(`MATCH (user1:User)-[denounce:DENOUNCE]->(user2:User) RETURN user1,user2,denounce  
+    ORDER BY id(denounce) SKIP ${skipCount} LIMIT 10`);
+    const query = await this.queryRepository
+      .initQuery()
+      .raw(
+        `MATCH (user1:User)-[denounce:DENOUNCE]->(user2:User) RETURN user1,user2,denounce  
+        ORDER BY id(denounce) SKIP ${skipCount} LIMIT 10`,
+      )
+      .run();
+
+      if (query?.length > 0) {
+        const denounces: CommentOutput[] = [];
+        
+        for (const publicationx of query) {
+          const { user1, user2, denounce } = publicationx;
+          console.log(publicationx);
+  
+          denounces.push({
+            idCommentary: denounce.identity,
+            user1:{ id:user1.identity, ...user1.properties},
+            user2:{ id:user2.identity, ...user2.properties},
+            foto: denounce.properties.foto
+          });
+        }
+        console.log(denounces);
+        return denounces;
+      }else{
+        const denounces: any[] = [];
+        return denounces;
+      }
   }
 
   async deleteCommentPublication(id: number): Promise<Boolean> {
@@ -93,6 +111,24 @@ export class CommentRepository {
       .raw(
         `MATCH ()-[comment:COMMENTED]->()
         WHERE id(comment) = ${id} DETACH DELETE comment`,
+      )
+      .run();
+
+    if (query?.length > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async deleteDenouncesByUsername(userName:string): Promise<Boolean> {
+    console.log(`MATCH ()-[denounce:DENOUNCE]->(user:User WHERE user.userName="${userName}") 
+    DETACH DELETE denounce`);
+    const query = await this.queryRepository
+      .initQuery()
+      .raw(
+        `MATCH ()-[denounce:DENOUNCE]->(user:User WHERE user.userName="${userName}") 
+        DETACH DELETE denounce`,
       )
       .run();
 

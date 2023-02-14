@@ -10,13 +10,13 @@ import { ChatController } from './chat.controller';
  imports: [
   TypeOrmModule.forRoot({
     type: 'postgres',
-    host: 'containers-us-west-152.railway.app',
-    username: 'postgres',
-    password: 'glRtqQASnYzZPXeBqCgZ',
-    database: 'railway',
+    host: 'localhost',
+    username: 'joel',
+    password: 'example',
+    database: 'chat_db',
     entities: [Chat],
     synchronize: true,
-    port:6981
+    port:5432
   }),
   TypeOrmModule.forFeature([Chat]),
 

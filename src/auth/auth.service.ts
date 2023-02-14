@@ -33,6 +33,17 @@ export class AuthService {
 
   }
 
+  async loginAdmin( loginInput: LoginInput): Promise<AuthResponse> {
+    const {userName,addressEmail,password} = loginInput;
+    const user = await this.userService.findOneAdmin({userName,addressEmail,password});
+    const token = this.getJwtToken(user.id.toString());
+    return {
+      token,
+      user
+    }
+
+  }
+
   async validateUser(id: number): Promise<User>{
     const user = await this.userService.findOneForId(id);
     

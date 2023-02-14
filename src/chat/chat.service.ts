@@ -20,6 +20,7 @@ export class ChatService {
           newMessage.emailsen= data.received;
           newMessage.text='Inicio una conversación';
           newMessage.idUsers=idUsers;
+          newMessage.createdAt = new Date();
           
           await this.createMessage(newMessage);
         }

@@ -16,6 +16,7 @@ export class ChatController {
 
   @Post('/api/chat')
   async Chat(@Body() data:any,@Res() res) {
+    console.log("[api][chat]")
     console.log("-----------------------------------");
     console.log(data);
     console.log("-----------------------------------");

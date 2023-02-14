@@ -14,29 +14,59 @@ import { validRoles } from 'src/auth/enums/valid-roles.enum';
 import { DenounceComment } from './entities/denounce.entity';
 import { DenouncePublication } from 'src/publication/dto/create-denounce.input';
 import { CommentOutput } from './entities/commentOutput';
+import { TreatedDenounceCommentInput } from './dto/treated-denounceComment.input';
+import { UserService } from '../user/user.service';
+import { PublicationService } from '../publication/publication.service';
 
 @Resolver(() => messageComment)
 export class CommentResolver {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    private readonly commentService: CommentService,
+  ) {}
 
   @Mutation(() => messageComment)
   @UseGuards(JwtAuthGuard)
-  createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput,
-  @CurrentUser([validRoles.user]) user: User) {
-    
-    return {confirmMessage: this.commentService.create(parseInt(user.id),createCommentInput)};
+  createComment(
+    @Args('createCommentInput') createCommentInput: CreateCommentInput,
+    @CurrentUser([validRoles.user]) user: User,
+  ) {
+    return {
+      confirmMessage: this.commentService.create(
+        parseInt(user.id),
+        createCommentInput,
+      ),
+    };
   }
 
   @Mutation(() => Boolean)
   @UseGuards(JwtAuthGuard)
-  createCommentDenounce(@Args('denounceComment') denounceComment: DenounceComment,
-  @CurrentUser([validRoles.user]) user: User) {
-    return this.commentService.createDenounce(parseInt(user.id),denounceComment);
+  createCommentDenounce(
+    @Args('denounceComment') denounceComment: DenounceComment,
+    @CurrentUser([validRoles.user]) user: User,
+  ) {
+    return this.commentService.createDenounce(
+      parseInt(user.id),
+      denounceComment,
+    );
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
+  deleteCommentDenounce(
+    @Args('idDenounceComment') idDenounceComment: number,
+    @CurrentUser([validRoles.admin]) user: User,
+  ) {
+    return this.commentService.deleteDenounce(idDenounceComment);
+  }
+
+
 
   @Query(() => [CommentOutput])
   @UseGuards(JwtAuthGuard)
-  findAllCommentDenounce(@CurrentUser([]) user: User , @Args('Skip',{nullable:true}) skip?: number) {
+  findAllCommentDenounce(
+    @CurrentUser([validRoles.admin]) user: User,
+    @Args('Skip', { nullable: true }) skip?: number,
+  ) {
     return this.commentService.findAllDenounce(skip);
   }
 
@@ -46,12 +76,20 @@ export class CommentResolver {
     return this.commentService.countAllDenounce();
   }
 
-
   @Query(() => [Comment], { name: 'Allcomentary' })
-  findAll(@Args('id', { type: () => Int }) id: number,
-          @Args('pag', { type: () => Int ,defaultValue:10}) pag: number,
-          @Args('fecha', { type: () => String,nullable:true, defaultValue:(moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS').toString()) }) date: any) {
-    return this.commentService.findAll(id,pag, date);
+  findAll(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('pag', { type: () => Int, defaultValue: 10 }) pag: number,
+    @Args('fecha', {
+      type: () => String,
+      nullable: true,
+      defaultValue: moment(new Date())
+        .format('YYYY-MM-DDTHH:mm:ss.SSS')
+        .toString(),
+    })
+    date: any,
+  ) {
+    return this.commentService.findAll(id, pag, date);
   }
 
   // @Query(() => Comment, { name: 'comment' })
@@ -60,8 +98,15 @@ export class CommentResolver {
   // }
 
   @Mutation(() => messageComment)
-  updateComment(@Args('updateCommentInput') updateCommentInput: UpdateCommentInput) {
-    return {confirmMessage: this.commentService.update(updateCommentInput.id,updateCommentInput)};
+  updateComment(
+    @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
+  ) {
+    return {
+      confirmMessage: this.commentService.update(
+        updateCommentInput.id,
+        updateCommentInput,
+      ),
+    };
   }
 
   @Mutation(() => Boolean)

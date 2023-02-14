@@ -8,7 +8,6 @@ import {
   User,
 } from '@supabase/supabase-js'
 import {Blob} from 'buffer';
-
 import { request, response } from 'express';
 
 import {
@@ -39,7 +38,6 @@ import path, { join } from 'path';
 import { readFileSync } from 'fs';
 import { supabase } from './helpers/fileAuth.helper';
 import { Response } from 'express';
-
 @Controller('file')
 export class FileController {
   constructor(

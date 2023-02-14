@@ -27,5 +27,10 @@ export class AuthResolver {
     return this.authService.refreshToken(user);
   }
 
+  @Query(() => AuthResponse, { name: 'loginAdmin', description:'Permite loguear un administrador'})
+  async loginAdmin(@Args('loginInput') loginInput: LoginInput): Promise<AuthResponse> {
+    return this.authService.loginAdmin(loginInput);
+  }
+
 
 }

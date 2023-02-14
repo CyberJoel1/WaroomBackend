@@ -8,8 +8,15 @@ import { CommentOutput } from './entities/commentOutput';
 @Injectable()
 export class CommentService {
 
-  constructor(private readonly commentRepository: CommentRepository) {}
 
+  constructor(private readonly commentRepository: CommentRepository) {}
+  async deleteDenounce(idDenounceComment: number) {
+    try {
+      return await this.commentRepository.deleteDenounceComment(idDenounceComment);
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
+  }
   async createDenounce(id: number, denounceComment: DenounceComment) {
     try {
       return await this.commentRepository.denounceComment(id,
@@ -55,6 +62,16 @@ export class CommentService {
   async findAll(pag:number, id:number, date: any) {
     try {
       return await this.commentRepository.findAllCommentByPublication(pag,id,date);
+    } catch (error) {
+      this.handleDBerrors(error);
+    }
+  }
+
+
+  //TODO realizar borrado
+  async deleteDenounceByUserName(userName:string) {
+    try {
+      return await this.commentRepository.deleteDenouncesByUsername(userName);
     } catch (error) {
       this.handleDBerrors(error);
     }
