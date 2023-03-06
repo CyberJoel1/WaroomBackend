@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int, GraphQLISODateTime } from '@nestjs/graphql';
-import { IsOptional } from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional } from 'class-validator';
 
 @ObjectType()
 export class User {
@@ -29,4 +29,8 @@ export class User {
   @Field(() => String, { description: 'foto de perfil' ,nullable:true})
   @IsOptional()
   foto: String;
+
+  @Field(() => String, { description: 'Fecha de nacimiento del usuario' ,nullable:true})
+  @IsNotEmpty()
+  dateBirth: String;
 }
