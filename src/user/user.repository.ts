@@ -79,9 +79,21 @@ export class UserRepository {
       const {
         user: { identity, properties },
       } = query[0];
+      const { year, month, day, hour, minute, second, nanosecond } =
+      properties.dateBirth;
+      
+    const dataTime = new Date(
+      parseInt(year),
+      parseInt(month) - 1, // neo4j dates start at 1, js dates start at 0
+      parseInt(day),
+    );
 
+    let dateFinal = moment(dataTime).format('DD/MM/YYYY');
+    properties.dateBirth=dateFinal;
+    console.log(properties);
       return {
         id: identity,
+        dateBirth:dateFinal,
         ...properties,
       };
     } else {
@@ -105,10 +117,21 @@ export class UserRepository {
       const {
         user: { identity, properties },
       } = query[0];
+      const { year, month, day, hour, minute, second, nanosecond } =
+      properties.dateBirth;
+      
+    const dataTime = new Date(
+      parseInt(year),
+      parseInt(month) - 1, // neo4j dates start at 1, js dates start at 0
+      parseInt(day),
+    );
 
+    let dateFinal = moment(dataTime).format('DD/MM/YYYY');
+    properties.dateBirth=dateFinal;
       return {
         id: identity,
         ...properties,
+        dateBirth:dateFinal,
       };
     } else {
       throw new BadRequestException('Los datos no son los correctos');
@@ -134,10 +157,21 @@ export class UserRepository {
       const {
         user: { identity, properties },
       } = query[0];
+      const { year, month, day, hour, minute, second, nanosecond } =
+      properties.dateBirth;
+      
+    const dataTime = new Date(
+      parseInt(year),
+      parseInt(month) - 1, // neo4j dates start at 1, js dates start at 0
+      parseInt(day),
+    );
 
+    let dateFinal = moment(dataTime).format('DD/MM/YYYY');
+    properties.dateBirth=dateFinal;
       return {
         id: identity,
         ...properties,
+        dateBirth:dateFinal,
       };
     } else {
       throw new BadRequestException('Los datos no son los correctos');
