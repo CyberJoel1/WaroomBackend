@@ -1,6 +1,6 @@
 import { CreateUserInput } from './create-user.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
-import { IsDate, IsDateString, IsEnum, IsNotEmpty, IsOptional, Length, MaxDate, MaxLength, MinDate } from 'class-validator';
+import { IsDate, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, Length, MaxDate, MaxLength, MinDate } from 'class-validator';
 import { TypesUser } from '../enums/tiposUser.enums';
 import { UtilsMoment } from 'src/utils/moment.js/utils-momentjs';
 import { Transform } from 'class-transformer';
@@ -39,6 +39,7 @@ export class UpdateUserInput{
 
   @Field(() => String, { description: 'Email del usuario' ,nullable:true})
   @IsOptional()
+  @IsEmail({},{message:'El formato de email no es correcto'})
   addressEmail: String;
 
   @Length(10)
