@@ -1,3 +1,4 @@
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -71,3 +72,28 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+# Bienvenido a Waroom (Backend)
+	> La aplicación fue desarrollada para la presentación de mi tesis en la carrera de tecnologias de la información.
+# Arquitectura
+<div align="center">  <img src="/static/products/archivos/ArquiTes.PNG" alt="Arquitectura" width="500" height="300" style="border-radius: 50%;" />  </div>
+
+Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
+# Tabla SQL (Sección de chat)
+- Esta tabla permite que se almacenen los datos del chat
+- Esta tabla se llama **chat** 
+<div align="center">  <img src="static/products/archivos/TableExampleTes.PNG" alt="Tabla Chat" width="500" height="300" style="border-radius: 50%;" />  </div>
+
+# Base de datos basada en grafos
+- La base de datos es neo4j
+- Los usuarios podrán publicar sus inmuebles lo cuál se relacionará el usuario con el inmueble
+- Además los usuarios podrán interactuar con los inmuebles ya sea de otros usuario o de ellos mismos
+- Las actividades a realizar son : 
+	- Dar like a publicaciones
+	- Comentar publicaciones
+	- Crear publicaciones
+	- Denunciar publicaciones
+	- Enviar solicitud de amistad a otro usuario
+<div align="center">  <img src="static/products/archivos/StartTes.PNG" alt="Idea inicial neo4j" width="500" height="300" style="border-radius: 50%;" />  </div>
+
+<div align="center">  <img src="/static/products/archivos/GraphTest.PNG" alt="Idea final neo4j" width="600" height="600" style="border-radius: 50%;" />  </div>
+
